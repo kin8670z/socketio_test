@@ -1,0 +1,26 @@
+config:
+  target: "URL"
+  phases:
+    - duration: 60
+      arrivalRate: 50
+      maxVusers: 50
+  processor: "./function.js"
+  payload: 
+      path: "./data.csv"
+      fields: 
+        - "field1"
+        - "field2"
+scenarios:
+  - name: "Connect and send a bunch of messages"
+    engine: "socketio"
+    flow:
+    - get:
+        url: "/"
+    - function: "setMessage"
+    - emit:
+        channel: "sendMessage"
+        data: 
+          field1 :  "{{ field1 }}"
+          field2 :  "{{ field2 }}"
+          message: "{{ functions > message }}"
+    - think: 10
